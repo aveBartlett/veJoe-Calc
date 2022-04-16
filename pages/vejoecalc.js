@@ -1,9 +1,9 @@
 import Title from "../components/Common/Title";
 import Account from "../components/Common/Account";
 import Footer from "../components/Common/Footer";
-import Landing from "../components/Common/Landing";
+import VeJoeCalculator from "../components/Common/VeJoeCalculator";
 
-export default function Home() {
+export default function VeJoeHome() {
   return (
     <div>
       <div className="bg-black flex justify-center">
@@ -13,7 +13,7 @@ export default function Home() {
             <Account />
           </div>
           <main className="flex-grow flex bg-black">
-            <Landing />
+            <VeJoeCalculator />
           </main>
           <div className="flex justify-end">
             <Footer />

@@ -2,13 +2,17 @@ import { useContext, useEffect } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import Popup from "reactjs-popup";
 import { updateAccountDetails } from "../../Web3/AccountUtil";
-import Router from "next/router";
 import { MainContext } from "../../../context/Provider";
 
 export const AccountBadge = () => {
   const { authenticate, isAuthenticated, logout, user, chainId } = useMoralis();
   const context = useContext(MainContext);
   const web3Api = useMoralisWeb3Api();
+
+  const logoutMoralis = () => {
+    context.setAccountDetails({});
+    logout();
+  };
 
   useEffect(async () => {
     if (isAuthenticated) {
@@ -67,8 +71,7 @@ export const AccountBadge = () => {
                 </button>
                 <button
                   onClick={() => {
-                    logout();
-                    Router.reload(window.location.pathname);
+                    logoutMoralis();
                   }}
                   className="font-normal font-custom text-white hover:text-orange-200 text-lg"
                 >

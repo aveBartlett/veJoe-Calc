@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      serif: ["Bodoni Moda", "serif"],
+      sansserif: ["Bebas Neue", "serif"],
       custom: ["Roboto Mono", "monospace"],
     },
   },

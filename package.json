@@ -8,8 +8,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@traderjoe-xyz/sdk": "^0.8.6",
+    "@traderjoe-xyz/sdk": "^1.5.11",
     "@walletconnect/web3-provider": "^1.7.0",
+    "graphql-request": "^4.2.0",
     "moralis": "^0.0.135",
     "next": "12.0.7",
     "react": "^17.0.2",

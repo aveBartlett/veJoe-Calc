@@ -1,13 +1,19 @@
 export const getImgElementFromTokenAddress = (address) => {
-  //if wavax, return the local avax token
+  const imageClass = "w-8 w-8";
+
+  //if veJoe, return local img
   if (address === "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7") {
     return (
-      <img src="/avalanche_token_round.3e178e42.png" className="w-8 h-8" />
+      <img src="/avalanche_token_round.3e178e42.png" className={imageClass} />
     );
+  }
+  //if veJoe, return local img
+  if (address === "0x3cabf341943Bc8466245e4d6F1ae0f8D071a1456") {
+    return <img src="/veJoe.192d0354.png" className="w-16 h-16" />;
   }
   const alt = address;
   const src = `https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/logos/${address}/logo.png`;
-  return <img className="w-8 h-8" alt={alt} src={src} />;
+  return <img className={imageClass} alt={alt} src={src} />;
 };
 
 export const LpPairButton = (onClickFunc, lpPair) => {

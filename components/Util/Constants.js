@@ -1,3 +1,7 @@
+// -------------------------
+// CHAIN CONSTANTS
+//--------------------------
+
 export const AVALANCHE_MAINNET_PARAMS = {
   chainId: "0xA86A",
   chainName: "Avalanche Mainnet C-Chain",
@@ -54,3 +58,5 @@ export const networks = [
   AVALANCHE_MORALIS_PARAMS,
   AVALANCHE_TESTNET_PARAMS,
 ];
+
+export const SECONDS_IN_YEAR = 60 * 60 * 24 * 365;
