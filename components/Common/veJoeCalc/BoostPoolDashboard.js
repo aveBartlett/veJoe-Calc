@@ -1,5 +1,5 @@
 import React from "react";
-import { getImgElementFromTokenAddress } from "../../Util/ComponentUtil";
+import { getImgElementFromTokenAddress } from "../../Util/TokenLogoUtil";
 
 export default function BoostPoolDashboard(props) {
   return (
