@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import Popup from "reactjs-popup";
 import { updateAccountDetails } from "../../Web3/AccountUtil";
-import { MainContext } from "../../../context/Provider";
+import { MainContext } from "../../context/Provider";
 
 export const AccountBadge = () => {
   const { authenticate, isAuthenticated, logout, user, chainId } = useMoralis();

@@ -1,7 +1,7 @@
-import Title from "../components/Common/Title";
-import Account from "../components/Common/Account";
-import Footer from "../components/Common/Footer";
-import VeJoeCalculator from "../components/Common/VeJoeCalculator";
+import Title from "../src/components/Title";
+import Account from "../src/components/Account";
+import Footer from "../src/components/Footer";
+import VeJoeCalculator from "../src/components/VeJoeCalculator";
 
 export default function VeJoeHome() {
   return (

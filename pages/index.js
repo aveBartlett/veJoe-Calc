@@ -1,7 +1,7 @@
-import Title from "../components/Common/Title";
-import Account from "../components/Common/Account";
-import Footer from "../components/Common/Footer";
-import Landing from "../components/Common/Landing";
+import Title from "../src/components/Title";
+import Account from "../src/components/Account";
+import Footer from "../src/components/Footer";
+import Landing from "../src/components/Landing";
 
 export default function Home() {
   return (

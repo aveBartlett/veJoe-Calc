@@ -1,11 +1,11 @@
 import { useContext, useEffect } from "react";
-import { AVALANCHE_MAINNET_PARAMS } from "../../Util/Constants";
+import { AVALANCHE_MAINNET_PARAMS } from "../../util/Constants";
 import {
   getNetworkFromChainId,
   isChainIdValid,
   addAvalancheNetwork,
 } from "../../Web3/NetworkUtil";
-import { MainContext } from "../../../context/Provider";
+import { MainContext } from "../../context/Provider";
 import { useMoralis } from "react-moralis";
 
 export default function AvaxChainConfirmation() {

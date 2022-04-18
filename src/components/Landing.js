@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Joe3D from "../ThreeJs/Joe3D";
-import { MainContext } from "../../context/Provider";
+import { MainContext } from "../context/Provider";
 import { useMoralis } from "react-moralis";
 import Link from "next/link";
 

@@ -1,5 +1,5 @@
 import React, { createContext } from "react";
-import { AVALANCHE_MAINNET_PARAMS } from "../components/Util/Constants";
+import { AVALANCHE_MAINNET_PARAMS } from "../util/Constants";
 
 export const MainContext = createContext();
 
