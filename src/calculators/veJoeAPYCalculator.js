@@ -1,1 +1,7 @@
-export const CalculateBoostedFarmAPY = (farmInputValue, veJoeInput) => {};
+export const CalculateBoostedFarmAPY = (
+  boostedFarms,
+  farmInputValue,
+  veJoeInputValue
+) => {
+  //   console.log(boostedFarms);
+};

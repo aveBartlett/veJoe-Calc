@@ -1,4 +1,5 @@
 import { getNetworkFromChainId } from "./NetworkUtil";
+import { getVeJoeBalance } from "./subgraphs/VeJoeSubGraph";
 
 export const updateAccountDetails = async (
   web3Api,
@@ -8,6 +9,7 @@ export const updateAccountDetails = async (
 ) => {
   const options = { chain: chainId, address: address };
   const avaxBalance = await web3Api.account.getNativeBalance(options);
+  const veJoeBalance = await getVeJoeBalance(address);
 
   const network = getNetworkFromChainId(chainId);
 
@@ -16,13 +18,25 @@ export const updateAccountDetails = async (
   avaxBalance.decimalValue = decimalValue;
 
   const tokenBalances = await web3Api.account.getTokenBalances(options);
-
   context.setAccountDetails({
     address: address,
     avaxBalance: {
       balance: avaxBalance,
       decimalValue: decimalValue,
     },
+    veJoeBalance: veJoeBalance,
     tokenBalances: tokenBalances,
   });
+};
+
+export const getTokenBalance = (context, tokenAddress) => {
+  const accountDetails = context.main.accountDetails;
+  if (accountDetails.tokenBalances) {
+    for (const token of accountDetails.tokenBalances) {
+      if (token.token_address == tokenAddress) {
+        return token.balance / Math.pow(10, token.decimals);
+      }
+    }
+  }
+  return 0;
 };

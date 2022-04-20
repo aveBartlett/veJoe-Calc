@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from "graphql-request";
-import EXCHANGE_SUBGRAPH from "@traderjoe-xyz/sdk";
+import { EXCHANGE_SUBGRAPH } from "../util/Constants";
 
 const client = new GraphQLClient(EXCHANGE_SUBGRAPH, {
   headers: {},

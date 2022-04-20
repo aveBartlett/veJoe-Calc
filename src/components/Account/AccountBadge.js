@@ -10,7 +10,6 @@ export const AccountBadge = () => {
   const web3Api = useMoralisWeb3Api();
 
   const logoutMoralis = () => {
-    context.setAccountDetails({});
     logout();
   };
 
@@ -18,6 +17,8 @@ export const AccountBadge = () => {
     if (isAuthenticated) {
       const accountAddress = user.get("ethAddress");
       await updateAccountDetails(web3Api, context, accountAddress, chainId);
+    } else {
+      context.setAccountDetails({});
     }
   }, [user, isAuthenticated]);
 
