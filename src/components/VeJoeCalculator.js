@@ -7,6 +7,7 @@ import NumInputComponent from "./NumInputComponent";
 import { CalculateBoostedFarmAPY } from "../calculators/veJoeAPYCalculator";
 import { getTokenBalance } from "../Web3/AccountUtil";
 import { VEJOE_TOKEN_ADDRESS } from "../util/Constants";
+import { getPairsDetail } from "../web3/subgraphs/LiquidityPairSubgraph";
 
 export default function VeJoeCalculator() {
   const context = useContext(MainContext);
@@ -14,7 +15,6 @@ export default function VeJoeCalculator() {
   const [state, setState] = useState({
     selectedBoostedFarm: "",
     boostedFarms: {},
-    boostedFarmAPYMap: {},
     farmInputValue: 0.0,
     farmInputMaxValue: 0.0,
     veJoeInputValue: 0.0,
@@ -24,6 +24,13 @@ export default function VeJoeCalculator() {
   //on first time load
   useEffect(async () => {
     const boostedFarms = await getBoostedMasterchef();
+
+    //add more info to boosted farms
+    for (const pool of boostedFarms.pools) {
+      const pairDetail = await getPairsDetail(pool.pair);
+      pool["pairDetail"] = pairDetail;
+    }
+
     console.log(boostedFarms);
     setState((state) => ({
       ...state,
@@ -37,7 +44,6 @@ export default function VeJoeCalculator() {
   //on Authentication change update veJoe Max value
   useEffect(() => {
     const veJoeBalance = context.main.accountDetails.veJoeBalance;
-    console.log(context);
     if (veJoeBalance > 0) {
       setState((state) => ({
         ...state,
@@ -54,11 +60,12 @@ export default function VeJoeCalculator() {
   //on input value change
   useEffect(() => {
     //calculate the new APYs and update state
-    if (state.boostedFarms.data) {
+    if (state.boostedFarms.id) {
       setState((state) => ({
         ...state,
         boostedFarmAPYMap: CalculateBoostedFarmAPY(
-          state.boostedFarms.data.masterChefs[0].pools,
+          state.boostedFarms,
+          state.selectedBoostedFarm,
           state.farmInputValue,
           state.veJoeInputValue
         ),

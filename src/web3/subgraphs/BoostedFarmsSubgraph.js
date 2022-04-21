@@ -19,9 +19,6 @@ const getBoostedMasterchefQueryDocument = gql`
         balance
         jlpBalance
         accJoePerShare
-        rewarder {
-          name
-        }
       }
     }
   }

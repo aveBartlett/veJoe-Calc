@@ -63,6 +63,8 @@ export const SECONDS_IN_YEAR = 60 * 60 * 24 * 365;
 
 export const VEJOE_TOKEN_ADDRESS = "0x3cabf341943Bc8466245e4d6F1ae0f8D071a1456";
 
+export const VEJOE_SHARE = 0.4;
+
 export const BOOSTED_MASTERCHEF_SUBGRAPH =
   "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/boosted-master-chef";
 
