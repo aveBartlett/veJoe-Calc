@@ -1,5 +1,5 @@
 import { getNetworkFromChainId } from "./NetworkUtil";
-import { getVeJoeBalance } from "./subgraphs/VeJoeSubGraph";
+import { getVeJoeBalance } from "./subgraphs/VeJoeSubgraph";
 
 export const updateAccountDetails = async (
   web3Api,

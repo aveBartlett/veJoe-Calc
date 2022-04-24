@@ -4,7 +4,7 @@ import {
   getNetworkFromChainId,
   isChainIdValid,
   addAvalancheNetwork,
-} from "../../Web3/NetworkUtil";
+} from "../../util/NetworkUtil";
 import { MainContext } from "../../context/Provider";
 import { useMoralis } from "react-moralis";
 

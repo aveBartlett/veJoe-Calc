@@ -19,7 +19,7 @@ export const getImgElementFromTokenAddress = (address) => {
 export const LpPairButton = (onClickFunc, lpPair) => {
   return (
     <div
-      key={lpPair.pair.address}
+      key={lpPair.pair}
       className="border-slate-300 border-solid rounded-md
      border-2 flex items-center hover:bg-white p-3"
     >
@@ -28,14 +28,11 @@ export const LpPairButton = (onClickFunc, lpPair) => {
         onClick={() => onClickFunc()}
       >
         <div className="flex justify-center">
-          {getImgElementFromTokenAddress(lpPair.pair.token1.address)}
-          {getImgElementFromTokenAddress(lpPair.pair.token2.address)}
+          {getImgElementFromTokenAddress(lpPair.pairDetail.token0.id)}
+          {getImgElementFromTokenAddress(lpPair.pairDetail.token1.id)}
         </div>
-        <h1 className="text-base pt-2 ">
-          {lpPair.pair.token1.name}-{lpPair.pair.token2.name}
-        </h1>
-        <h1 className="text-base">{lpPair.pair.apy * 100}% APY</h1>
-        <h1 className="pt-2 font-bold">{lpPair.pair.riskLevel}</h1>
+        <h1 className="text-base pt-2 ">{lpPair.pairDetail.name}</h1>
+        <h1 className="text-base">{lpPair.baseAPR}% APR</h1>
       </button>
     </div>
   );

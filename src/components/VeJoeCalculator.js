@@ -1,19 +1,25 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useMoralis } from "react-moralis";
+
 import { MainContext } from "../context/Provider";
 import BoostPoolDashboard from "./veJoeCalc/BoostPoolDashboard";
-import { getBoostedMasterchef } from "../web3/subgraphs/BoostedFarmsSubgraph";
 import NumInputComponent from "./NumInputComponent";
-import { CalculateBoostedFarmAPY } from "../calculators/veJoeAPYCalculator";
-import { getTokenBalance } from "../Web3/AccountUtil";
+import Loading3D from "../threeJs/Loading3D";
+
+import { calculateBaseAPR } from "../util/veJoeAPYUtil";
+import { getTokenBalance } from "../util/AccountUtil";
 import { VEJOE_TOKEN_ADDRESS } from "../util/Constants";
-import { getPairsDetail } from "../web3/subgraphs/LiquidityPairSubgraph";
+
+import { getBoostedMasterchef } from "../util/subgraphs/BoostedFarmsSubgraph";
+import { getPairsDetail } from "../util/subgraphs/LiquidityPairSubgraph";
+import { getEmissions } from "../util/subgraphs/EmissionsSubGraph";
+import { getJoePrice } from "../util/subgraphs/JoeSubgraph";
 
 export default function VeJoeCalculator() {
   const context = useContext(MainContext);
 
   const [state, setState] = useState({
-    selectedBoostedFarm: "",
+    loaded: false,
+    selectedBoostedFarm: {},
     boostedFarms: {},
     farmInputValue: 0.0,
     farmInputMaxValue: 0.0,
@@ -23,22 +29,44 @@ export default function VeJoeCalculator() {
 
   //on first time load
   useEffect(async () => {
+    setState((state) => ({
+      ...state,
+      loaded: false,
+    }));
+    //setup all information to make VeJoe Calculations
     const boostedFarms = await getBoostedMasterchef();
 
-    //add more info to boosted farms
+    boostedFarms["joePrice"] = await getJoePrice();
+
+    const emissions = await getEmissions();
+    boostedFarms["joePerSec"] = emissions.joePerSec;
+    boostedFarms["totalAllocPointBase"] = emissions.totalAllocPoint;
+
+    //add more info to boosted farms and calcualte APY
     for (const pool of boostedFarms.pools) {
       const pairDetail = await getPairsDetail(pool.pair);
       pool["pairDetail"] = pairDetail;
+      pool["baseAPR"] = calculateBaseAPR(
+        pool,
+        emissions.totalAllocPoint,
+        emissions.joePerSec / 2,
+        boostedFarms.joePrice
+      );
     }
 
-    console.log(boostedFarms);
     setState((state) => ({
       ...state,
       boostedFarms: boostedFarms,
-      selectedBoostedFarm: boostedFarms.pools[0].pair,
+      selectedBoostedFarm: boostedFarms.pools[0],
     }));
 
     context.setBoostedFarms(boostedFarms);
+    console.log(boostedFarms);
+
+    setState((state) => ({
+      ...state,
+      loaded: true,
+    }));
   }, []);
 
   //on Authentication change update veJoe Max value
@@ -57,27 +85,18 @@ export default function VeJoeCalculator() {
     }
   }, [context.main.accountDetails]);
 
-  //on input value change
-  useEffect(() => {
-    //calculate the new APYs and update state
-    if (state.boostedFarms.id) {
-      setState((state) => ({
-        ...state,
-        boostedFarmAPYMap: CalculateBoostedFarmAPY(
-          state.boostedFarms,
-          state.selectedBoostedFarm,
-          state.farmInputValue,
-          state.veJoeInputValue
-        ),
-      }));
-    }
-  }, [state.farmInputValue, state.veJoeInputValue]);
+  // calculate the APR of the selected pool
+  useEffect(() => {}, [
+    state.selectedBoostedFarm,
+    state.farmInputValue,
+    state.veJoeInputValue,
+  ]);
 
   // on selected farm change update max value
   useEffect(() => {
     const boostedFarmBalance = getTokenBalance(
       context,
-      state.selectedBoostedFarm
+      state.selectedBoostedFarm.pair
     );
 
     if (boostedFarmBalance > 0) {
@@ -93,41 +112,50 @@ export default function VeJoeCalculator() {
     }
   }, [state.selectedBoostedFarm, context.main.accountDetails]);
 
-  return (
-    <div className="flex justify-center items-center flex-grow">
-      <div className=" flex items-center flex-col p-3 align-middle">
-        <BoostPoolDashboard
-          boostedFarmList={state.boostedFarmList}
-          veJoeAmount={state.veJoeInputValue}
-          farmAmount={state.farmInputValue}
-          onChangeFarmSelection={(selection) => {
-            setState((state) => ({
-              ...state,
-              boostedFarmSelection: selection,
-            }));
-          }}
-        />
-        <NumInputComponent
-          fieldName="veJoe"
-          maxValue={state.veJoeInputMaxValue}
-          onChangeInput={(input) => {
-            setState((state) => ({
-              ...state,
-              veJoeInputValue: input,
-            }));
-          }}
-        />
-        <NumInputComponent
-          fieldName="pool"
-          maxValue={state.farmInputMaxValue}
-          onChangeInput={(input) => {
-            setState((state) => ({
-              ...state,
-              farmInputValue: input,
-            }));
-          }}
-        />
+  if (!state.loaded) {
+    return (
+      <div className="flex justify-center items-center flex-grow">
+        <div className=" flex items-center flex-col p-3 align-middle">
+          <Loading3D />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <div className="flex justify-center items-center flex-grow">
+        <div className=" flex items-center flex-col p-3 align-middle">
+          <BoostPoolDashboard
+            boostedFarmList={state.boostedFarmList}
+            selectedBoostedFarm={state.selectedBoostedFarm}
+            onChangeFarmSelection={(selection) => {
+              setState((state) => ({
+                ...state,
+                boostedFarmSelection: selection,
+              }));
+            }}
+          />
+          <NumInputComponent
+            fieldName="veJoe"
+            maxValue={state.veJoeInputMaxValue}
+            onChangeInput={(input) => {
+              setState((state) => ({
+                ...state,
+                veJoeInputValue: input,
+              }));
+            }}
+          />
+          <NumInputComponent
+            fieldName="pool"
+            maxValue={state.farmInputMaxValue}
+            onChangeInput={(input) => {
+              setState((state) => ({
+                ...state,
+                farmInputValue: input,
+              }));
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
 }

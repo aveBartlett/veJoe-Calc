@@ -1,12 +1,12 @@
 import React from "react";
-import { getImgElementFromTokenAddress } from "../../util/TokenLogoUtil";
+import { LpPairButton } from "../../util/TokenLogoUtil";
 
 export default function BoostPoolDashboard(props) {
   return (
-    <div>
-      {getImgElementFromTokenAddress(
-        "0x3cabf341943Bc8466245e4d6F1ae0f8D071a1456"
-      )}
+    <div className=" flex items-center flex-col p-3 align-middle">
+      {/* the selected coin info */}
+      <div>{LpPairButton(() => {}, props.selectedBoostedFarm)}</div>
+      {/* rest of the token APR */}
     </div>
   );
 }

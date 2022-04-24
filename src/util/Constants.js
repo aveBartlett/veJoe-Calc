@@ -68,6 +68,9 @@ export const VEJOE_SHARE = 0.4;
 export const BOOSTED_MASTERCHEF_SUBGRAPH =
   "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/boosted-master-chef";
 
+export const MASTERCHEF_V2_SUBGRAPH =
+  "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/masterchefv2";
+
 export const VEJOE_SUBGRAPH =
   "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/vejoe";
 

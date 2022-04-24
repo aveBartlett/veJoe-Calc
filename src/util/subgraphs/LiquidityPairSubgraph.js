@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from "graphql-request";
-import { EXCHANGE_SUBGRAPH } from "../../util/Constants";
+import { EXCHANGE_SUBGRAPH } from "../Constants";
 
 const client = new GraphQLClient(EXCHANGE_SUBGRAPH, {
   headers: {},
@@ -15,11 +15,11 @@ const getPairsQueryDocument = gql`
       token1Price
       token0 {
         id
-        name
+        symbol
       }
       token1 {
         id
-        name
+        symbol
       }
     }
   }

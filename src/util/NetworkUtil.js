@@ -3,7 +3,7 @@ import {
   AVALANCHE_MAINNET_PARAMS,
   AVALANCHE_TESTNET_PARAMS,
   AVALANCHE_LOCAL_PARAMS,
-} from "../util/Constants";
+} from "./Constants";
 
 export const getNetworkFromChainId = (chainId) => {
   if (!chainId) return;

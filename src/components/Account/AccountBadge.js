@@ -1,7 +1,8 @@
 import { useContext, useEffect } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import Popup from "reactjs-popup";
-import { updateAccountDetails } from "../../Web3/AccountUtil";
+import { isChainIdValid } from "../../util/NetworkUtil";
+import { updateAccountDetails } from "../../util/AccountUtil";
 import { MainContext } from "../../context/Provider";
 
 export const AccountBadge = () => {
@@ -14,7 +15,7 @@ export const AccountBadge = () => {
   };
 
   useEffect(async () => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isChainIdValid(chainId)) {
       const accountAddress = user.get("ethAddress");
       await updateAccountDetails(web3Api, context, accountAddress, chainId);
     } else {

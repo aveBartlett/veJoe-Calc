@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from "graphql-request";
-import { VEJOE_SUBGRAPH } from "../../util/Constants";
+import { VEJOE_SUBGRAPH } from "../Constants";
 
 const client = new GraphQLClient(VEJOE_SUBGRAPH, {
   headers: {},
