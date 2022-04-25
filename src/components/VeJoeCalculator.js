@@ -125,7 +125,7 @@ export default function VeJoeCalculator() {
       <div className="flex justify-center items-center flex-grow">
         <div className=" flex items-center flex-col p-3 align-middle">
           <BoostPoolDashboard
-            boostedFarmList={state.boostedFarmList}
+            boostedFarms={state.boostedFarms.pools}
             selectedBoostedFarm={state.selectedBoostedFarm}
             onChangeFarmSelection={(selection) => {
               setState((state) => ({

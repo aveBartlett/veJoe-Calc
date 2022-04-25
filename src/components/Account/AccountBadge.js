@@ -4,6 +4,7 @@ import Popup from "reactjs-popup";
 import { isChainIdValid } from "../../util/NetworkUtil";
 import { updateAccountDetails } from "../../util/AccountUtil";
 import { MainContext } from "../../context/Provider";
+import { JOE_TOKEN_LIST_URL } from "../../util/Constants";
 
 export const AccountBadge = () => {
   const { authenticate, isAuthenticated, logout, user, chainId } = useMoralis();
@@ -13,6 +14,13 @@ export const AccountBadge = () => {
   const logoutMoralis = () => {
     logout();
   };
+
+  //fetch most updated tokenList
+  useEffect(async () => {
+    fetch(JOE_TOKEN_LIST_URL)
+      .then((res) => res.json())
+      .then((out) => context.setJoeTokenList(out.tokens));
+  }, []);
 
   useEffect(async () => {
     if (isAuthenticated && isChainIdValid(chainId)) {

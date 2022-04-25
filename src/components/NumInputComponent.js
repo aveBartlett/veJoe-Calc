@@ -45,7 +45,7 @@ const NumInputComponent = (props) => {
   };
 
   return (
-    <div className="items-center justify-center pt-4 flex flex-col space-y-2">
+    <div className="items-center justify-center py-2 flex flex-col space-y-2">
       <div className="grid-cols-4 border-b-2 border-white pr-2 ">
         <label className="font-bold text-white font-custom">
           {props.fieldName}:

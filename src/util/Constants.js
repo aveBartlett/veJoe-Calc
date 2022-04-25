@@ -76,3 +76,6 @@ export const VEJOE_SUBGRAPH =
 
 export const EXCHANGE_SUBGRAPH =
   "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/exchange";
+
+export const JOE_TOKEN_LIST_URL =
+  "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/joe.tokenlist.json";
