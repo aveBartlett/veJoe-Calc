@@ -14,6 +14,7 @@ import { getBoostedMasterchef } from "../util/subgraphs/BoostedFarmsSubgraph";
 import { getPairsDetail } from "../util/subgraphs/LiquidityPairSubgraph";
 import { getEmissions } from "../util/subgraphs/EmissionsSubGraph";
 import { getJoePrice } from "../util/subgraphs/JoeSubgraph";
+import { getPairValue } from "../util/PairPriceUtil";
 
 export default function VeJoeCalculator() {
   const context = useContext(MainContext);
@@ -46,6 +47,9 @@ export default function VeJoeCalculator() {
     //add more info to boosted farms and calcualte APY
     for (const pool of boostedFarms.pools) {
       const pairDetail = await getPairsDetail(pool.pair);
+
+      pairDetail["pairPrice"] = await getPairValue(pairDetail, context);
+
       pool["pairDetail"] = pairDetail;
       pool["baseAPR"] = calculateBaseAPR(
         pool,
@@ -89,16 +93,23 @@ export default function VeJoeCalculator() {
 
   // calculate the APR of the selected pool
   useEffect(() => {
-    const boostedFarmCalculations = state.selectedBoostedFarm;
-    boostedFarmCalculations["boostedAPR"] = calculateBoostedAPR(
-      state.selectedBoostedFarm,
-      state.boostedFarms.totalAllocPointBase,
-      state.boostedFarms.joePerSec,
-      state.boostedFarms.joePrice,
-      state.veJoeInputValue,
-      state.farmInputValue
-    );
-  }, [state.selectedBoostedFarm, state.farmInputValue, state.veJoeInputValue]);
+    if (state.loaded) {
+      const boostedFarmCalculations = state.selectedBoostedFarm;
+      boostedFarmCalculations["boostedAPR"] = calculateBoostedAPR(
+        state.selectedBoostedFarm,
+        state.boostedFarms.totalAllocPointBase,
+        state.boostedFarms.joePerSec,
+        state.boostedFarms.joePrice,
+        state.veJoeInputValue,
+        state.farmInputValue
+      );
+    }
+  }, [
+    state.selectedBoostedFarm,
+    state.farmInputValue,
+    state.veJoeInputValue,
+    state.loaded,
+  ]);
 
   // on selected farm change update max value
   useEffect(() => {
@@ -131,7 +142,7 @@ export default function VeJoeCalculator() {
   } else {
     return (
       <div className="flex justify-center items-center flex-grow">
-        <div className=" flex items-center flex-col p-3 align-middle">
+        <div className=" flex items-center flex-col p-3 align-middle w-80">
           {/* the selected coin info */}
           <SelectedPoolStats selectedBoostedFarm={state.selectedBoostedFarm} />
           <NumInputComponent
@@ -145,7 +156,7 @@ export default function VeJoeCalculator() {
             }}
           />
           <NumInputComponent
-            fieldName="pool"
+            fieldName="farm "
             maxValue={state.farmInputMaxValue}
             onChangeInput={(input) => {
               setState((state) => ({
@@ -169,3 +180,5 @@ export default function VeJoeCalculator() {
     );
   }
 }
+
+const onFirstTimeLoad = () => {};

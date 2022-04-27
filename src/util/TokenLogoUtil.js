@@ -3,7 +3,13 @@ import React, { useContext } from "react";
 import { VisibilityContext } from "react-horizontal-scrolling-menu";
 
 export const getImgElementFromTokenAddress = (address, size = 6) => {
-  const imageClass = `w-${size} h-${size} border-transparent border-solid rounded-xl `;
+  let imageClass = `w-${size} h-${size} border-transparent border-solid rounded-xl `;
+
+  imageClass = "w-6 h-6 border-transparent border-solid rounded-xl";
+  //doing this because that bitch wont compile
+  if (size > 6) {
+    imageClass = "w-8 h-8 border-transparent border-solid rounded-xl";
+  }
 
   //if avax, return local img
   if (address.toLowerCase() === "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7") {

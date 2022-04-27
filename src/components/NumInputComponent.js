@@ -7,6 +7,8 @@ const NumInputComponent = (props) => {
     buttonDisabled: true,
   });
 
+  const maxInputLength = 10;
+
   const regex = /^[0-9]*[.,]?[0-9]*$/;
 
   const validateNumFormat = (evt) => {
@@ -20,7 +22,7 @@ const NumInputComponent = (props) => {
       var key = keyEvent.keyCode || keyEvent.which;
       key = String.fromCharCode(key);
     }
-    if (!regex.test(key)) {
+    if (!regex.test(key) || state.investmentValue.length + 1 > maxInputLength) {
       keyEvent.returnValue = false;
       if (keyEvent.preventDefault) keyEvent.preventDefault();
     }
@@ -45,23 +47,24 @@ const NumInputComponent = (props) => {
   };
 
   return (
-    <div className="items-center justify-center py-2 flex flex-col space-y-2">
-      <div className="grid-cols-4 border-b-2 border-white pr-2 ">
+    <div className="items-center justify-center py-2 flex flex-col ">
+      <div className="border-b-2 border-white">
         <label className="font-bold text-white font-custom">
           {props.fieldName}:
         </label>
         <input
-          className="col-span-3 text-white font-custom bg-black outline-none appearance-none"
+          className="text-white font-custom bg-black outline-none appearance-none w-32"
           type="text"
           inputMode="decimal"
           pattern={regex}
           required
           onKeyPress={(evt) => validateNumFormat(evt)}
           onChange={(evt) => onChangeInput(evt)}
-          value={state.investmentValue}
-          placeholder={props.maxValue}
+          value={state.investmentValue.substring(0, maxInputLength)}
+          placeholder={String(props.maxValue).substring(0, maxInputLength)}
           name="investmentValue"
         ></input>
+
         {props.maxValue && props.maxValue > 0 ? (
           <button
             className="text-slate-500 font-custom font-semibold hover:text-white"
@@ -70,7 +73,9 @@ const NumInputComponent = (props) => {
             max
           </button>
         ) : (
-          <div></div>
+          <button className="text-transparent font-custom font-semibold">
+            max
+          </button>
         )}
       </div>
     </div>

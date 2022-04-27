@@ -11,10 +11,13 @@
     "@traderjoe-xyz/sdk": "^1.5.11",
     "@walletconnect/web3-provider": "^1.7.0",
     "graphql-request": "^4.2.0",
+    "lodash": "^4.17.21",
     "moralis": "^0.0.135",
     "next": "12.0.7",
+    "popmotion": "^11.0.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-horizontal-scrolling-menu": "^2.7.1",
     "react-moralis": "^0.3.1",
     "reactjs-popup": "^2.0.5",
     "three": "^0.135.0"

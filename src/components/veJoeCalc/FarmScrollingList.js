@@ -1,423 +1,117 @@
-// import React, { useState, useEffect } from "react";
-// import { LpPairButton } from "../../util/TokenLogoUtil";
-// import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
+import React, { useState, useEffect } from "react";
+import { LpPairButton } from "../../util/TokenLogoUtil";
+import { ScrollMenu, VisibilityContext } from "react-horizontal-scrolling-menu";
 
-// export default function FarmScrollingList(props) {
-//   const [state, setState] = useState({
-//     farmList: [],
-//   });
+export default function FarmScrollingList(props) {
+  const [state, setState] = useState({
+    farmList: [],
+  });
 
-//   const [selected, setSelected] = React.useState([]);
-//   const [position, setPosition] = React.useState(0);
-
-//   useEffect(() => {
-//     let farmList = [];
-//     for (const farm of props.boostedFarms) {
-//       farmList.push(farm);
-//     }
-
-//     farmList.sort((a, b) => {
-//       if (b.baseAPR < a.baseAPR) {
-//         return -1;
-//       }
-//       if (b.baseAPR > a.baseAPR) {
-//         return 1;
-//       }
-//       return 0;
-//     });
-
-//     setState((state) => ({
-//       ...state,
-//       farmList: farmList,
-//     }));
-//   }, []);
-
-//   const isItemSelected = (farm) => !!selected.find((el) => el === farm);
-
-//   const handleClick =
-//     (id) =>
-//     ({ getItemById, scrollToItem }) => {
-//       const itemSelected = isItemSelected(id);
-
-//       setSelected((currentSelected) =>
-//         itemSelected
-//           ? currentSelected.filter((el) => el !== id)
-//           : currentSelected.concat(id)
-//       );
-//     };
-
-//   return (
-//     <div className=" flex items-center flex-col align-middle w-1/2">
-//       {/* rest of the tokens APR */}
-//       <div className="w-3/4">
-//         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-//           {state.farmList.map((farm) =>
-//             LpPairButton(
-//               (selectedFarm) => {
-//                 handleClick(selectedFarm.pair);
-//                 props.onChangeFarmSelection(selectedFarm);
-//               },
-//               handleClick(farm),
-//               farm
-//             )
-//           )}
-//         </ScrollMenu>
-//       </div>
-//     </div>
-//   );
-// }
-
-import React from 'react';
-
-import throttle from 'lodash/throttle';
-import { animate } from 'popmotion/dist/popmotion';
-
-// NOTE: prevent scrolling on main page
-import usePreventBodyScroll from '../helpers/usePreventBodyScroll';
-
-// NOTE drag with mouse
-import useDrag from '../helpers/useDrag';
-
-// NOTE hide scrollbar in _app.js
-
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-
-
-const elemPrefix = 'test';
-const getId = (index) => `${elemPrefix}${index}`;
-
-const getItems = () =>
-  Array(10)
-    .fill(0)
-    .map((_, ind) => ({ id: getId(ind) }));
-
-const onWheel = (
-  apiObj,
-  ev
-) => {
-  // NOTE: no good standart way to distinguish touchpad scrolling gestures
-  // but can assume that gesture will affect X axis, mouse scroll only Y axis
-  // of if deltaY too small probably is it touchpad
-  const isThouchpad = Math.abs(ev.deltaX) !== 0 || Math.abs(ev.deltaY) < 15;
-
-  if (isThouchpad) {
-    ev.stopPropagation();
-    return;
-  }
-
-  if (ev.deltaY < 0) {
-    apiObj.scrollNext();
-  } else if (ev.deltaY > 0) {
-    apiObj.scrollPrev();
-  }
-};
-
-function App() {
-  const [items, setItems] = React.useState(getItems);
-  const [selected, setSelected] = React.useState<string[]>([]);
+  const [selected, setSelected] = React.useState([]);
   const [position, setPosition] = React.useState(0);
-  const [duration, setDuration] = React.useState(500);
-  const [ease, setEase] = React.useState('noEasing');
-  const [customAnimation, setCustomAnimation] = React.useState(false);
 
-  const isItemSelected = (id) =>
-    !!selected.find((el) => el === id);
+  useEffect(() => {
+    let farmList = [];
+    for (const farm of props.boostedFarms) {
+      farmList.push(farm);
+    }
 
-  const { dragStart, dragStop, dragMove, dragging } = useDrag();
-
-  const handleDrag =
-    ({ scrollContainer }) =>
-    (ev) =>
-      dragMove(ev, (posDiff) => {
-        if (scrollContainer.current) {
-          scrollContainer.current.scrollLeft += posDiff;
-        }
-      });
-
-  const handleItemClick =
-    (itemId) =>
-    ({ getItemById, scrollToItem }) => {
-      if (dragging) {
-        return false;
+    farmList.sort((a, b) => {
+      if (b.baseAPR < a.baseAPR) {
+        return -1;
       }
-      const itemSelected = isItemSelected(itemId);
+      if (b.baseAPR > a.baseAPR) {
+        return 1;
+      }
+      return 0;
+    });
+
+    setState((state) => ({
+      ...state,
+      farmList: farmList,
+    }));
+  }, []);
+
+  const isItemSelected = (farm) => !!selected.find((el) => el === farm);
+
+  const handleClick =
+    (id) =>
+    ({ getItemById, scrollToItem }) => {
+      const itemSelected = isItemSelected(id);
 
       setSelected((currentSelected) =>
         itemSelected
-          ? currentSelected.filter((el) => el !== itemId)
-          : currentSelected.concat(itemId)
+          ? currentSelected.filter((el) => el !== id)
+          : currentSelected.concat(id)
       );
-
-      if (!itemSelected) {
-        // NOTE: center item on select
-        scrollToItem(getItemById(itemId), 'smooth', 'center', 'nearest');
-      }
     };
 
-  const restorePosition = React.useCallback(
-    ({
-      scrollContainer,
-      getItemById,
-      scrollToItem,
-    }) => {
-      // NOTE: scroll to item, auto/smooth for animation
-      // scrollToItem(getItemById('test7'), 'auto');
-      // NOTE: or restore exact position by pixels
-      // scrollContainer.current.scrollLeft = position;
-    },
-    [position]
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const savePosition = React.useCallback(
-    throttle(({ scrollContainer }) => {
-      !!scrollContainer.current &&
-        setPosition(scrollContainer.current.scrollLeft);
-    }, 500),
-    []
-  );
-
-  const { disableScroll, enableScroll } = usePreventBodyScroll();
-
-  const handleRemoveLast = React.useCallback(() => {
-    setItems((prev) => prev.slice(0, prev.length - 1));
-  }, []);
-
   return (
-    <div>
-      <div className="example" style={{ height: '200vh', paddingTop: '200px' }}>
-        <div onMouseEnter={disableScroll} onMouseLeave={enableScroll}>
-          <div onMouseLeave={dragStop}>
-            <ScrollMenu
-              LeftArrow={LeftArrow}
-              RightArrow={RightArrow}
-              onInit={restorePosition}
-              onScroll={savePosition}
-              onWheel={onWheel}
-              onMouseDown={() => dragStart}
-              onMouseUp={() => dragStop}
-              onMouseMove={handleDrag}
-              transitionDuration={duration}
-              transitionEase={easingFunctions[ease]}
-              transitionBehavior={customAnimation ? scrollBehavior : undefined}
-            >
-              {items.map(({ id }) => (
-                <Card
-                  title={id}
-                  itemId={id} // NOTE: itemId is required for track items
-                  key={id}
-                  onClick={handleItemClick(id)}
-                  selected={isItemSelected(id)}
-                />
-              ))}
-            </ScrollMenu>
-            <OptionsWrapper>
-              <OptionItem label="Duration">
-                <input
-                  value={duration}
-                  onChange={(ev) => setDuration(+ev.target.value)}
-                />
-              </OptionItem>
-              <OptionItem label="Ease">
-                <select
-                  name="ease"
-                  id="ease"
-                  value={ease}
-                  onChange={(ev) => setEase(ev.target.value)}
-                >
-                  {Object.entries(easingFunctions).map(([name, fn]) => (
-                    <option value={name} key={name}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              </OptionItem>
-              <OptionItem label="Custom animation">
-                <input
-                  checked={customAnimation}
-                  onChange={(ev) => setCustomAnimation(ev.target.checked)}
-                  type="checkbox"
-                  style={{ width: '20px', height: '20px' }}
-                />
-              </OptionItem>
-            </OptionsWrapper>
-
-            <button onClick={handleRemoveLast}>Remove last</button>
-          </div>
-        </div>
+    <div className=" flex items-center flex-col align-middle w-1/2">
+      {/* rest of the tokens APR */}
+      <div className="">
+        <ScrollMenu
+          scrollContainerClassName=""
+          LeftArrow={LeftArrow}
+          RightArrow={RightArrow}
+        >
+          {state.farmList.map((farm) =>
+            LpPairButton(
+              (selectedFarm) => {
+                handleClick(selectedFarm.pair);
+                props.onChangeFarmSelection(selectedFarm);
+              },
+              handleClick(farm),
+              farm
+            )
+          )}
+        </ScrollMenu>
       </div>
     </div>
   );
 }
 
 function LeftArrow() {
-  const { initComplete, isFirstItemVisible, scrollPrev } =
+  const { isFirstItemVisible, scrollPrev } =
     React.useContext(VisibilityContext);
-  // NOTE initComplete is a hack for  prevent blinking on init
-  // Can get visibility of item only after it's rendered
 
   return (
     <Arrow
-      disabled={!initComplete || (initComplete && isFirstItemVisible)}
-      onClick={() => scrollPrev(isTest ? 'auto' : undefined)}
+      className="text-white"
+      disabled={isFirstItemVisible}
+      onClick={() => scrollPrev()}
     >
-      Left
+      <h1 className="text-white font-custom text-3xl flex flex-column justify-center pr-1">
+        {"<"}
+      </h1>
     </Arrow>
   );
 }
 
 function RightArrow() {
-  const { initComplete, isLastItemVisible, scrollNext } =
-    React.useContext(VisibilityContext);
+  const { isLastItemVisible, scrollNext } = React.useContext(VisibilityContext);
 
   return (
     <Arrow
-      disabled={initComplete && isLastItemVisible}
-      onClick={() => scrollNext(isTest ? 'auto' : undefined)}
+      className="text-white"
+      disabled={isLastItemVisible}
+      onClick={() => scrollNext()}
     >
-      Right
+      <h1 className="text-white font-custom text-3xl flex flex-column justify-center pl-1">
+        {">"}
+      </h1>
     </Arrow>
   );
 }
 
-function Arrow({
-  children,
-  disabled,
-  onClick,
-}) {
+function Arrow({ children, disabled, onClick }) {
   return (
     <button
       disabled={disabled}
       onClick={onClick}
-      style={{
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        right: '1%',
-        opacity: disabled ? '0' : '1',
-        userSelect: 'none',
-      }}
+      className="disabled:opacity-50"
     >
       {children}
     </button>
   );
 }
-
-function Card({
-  onClick,
-  selected,
-  title,
-  itemId,
-}) {
-  const visibility = React.useContext(VisibilityContext);
-
-  const visible =
-    !visibility.initComplete ||
-    (visibility.initComplete && visibility.isItemVisible(itemId));
-
-  return (
-    <div
-      data-cy={itemId}
-      onClick={() => onClick(visibility)}
-      onKeyDown={(ev) => {
-        ev.code === 'Enter' && onClick(visibility);
-      }}
-      role="button"
-      style={{
-        border: '1px solid',
-        display: 'inline-block',
-        margin: '0 10px',
-        width: '160px',
-        userSelect: 'none',
-      }}
-      tabIndex={0}
-      className="card"
-    >
-      <div className="card-header">
-        <div>{title}</div>
-        <div style={{ backgroundColor: visible ? 'transparent' : 'gray' }}>
-          visible: {JSON.stringify(visible)}
-        </div>
-        <div>selected: {JSON.stringify(!!selected)}</div>
-      </div>
-      <div
-        style={{
-          backgroundColor: selected ? 'green' : 'bisque',
-          height: '200px',
-        }}
-      />
-    </div>
-  );
-}
-
-const Wrapper = () => {
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return mounted ? <App /> : null;
-};
-
-export const OptionsWrapper = ({ children }) => (
-  <div style={{ marginTop: '10px', display: 'flex', columnGap: '10px' }}>
-    {children}
-  </div>
-);
-
-export const OptionItem = ({ children, label }) => (
-  <div style={{ display: 'flex', flexDirection: 'column' }}>
-    <label>{label}</label>
-    {children}
-  </div>
-);
-
-const scrollBehavior = (instructions) => {
-  const [{ el, left }] = instructions;
-  const styler = Styler(el);
-
-  animate({
-    from: el.scrollLeft,
-    to: left,
-    type: 'spring',
-    onUpdate: (left) => styler.set('scrollLeft', left),
-  });
-};
-
-const easingFunctions = {
-  noEasing: undefined,
-  // no easing, no acceleration
-  linear: (t) => t,
-  // accelerating from zero velocity
-  easeInQuad: (t) => t * t,
-  // decelerating to zero velocity
-  easeOutQuad: (t) => t * (2 - t),
-  // acceleration until halfway, then deceleration
-  easeInOutQuad: (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
-  // accelerating from zero velocity
-  easeInCubic: (t) => t * t * t,
-  // decelerating to zero velocity
-  easeOutCubic: (t) => --t * t * t + 1,
-  // acceleration until halfway, then deceleration
-  easeInOutCubic: (t) =>
-    t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
-  // accelerating from zero velocity
-  easeInQuart: (t) => t * t * t * t,
-  // decelerating to zero velocity
-  easeOutQuart: (t) => 1 - --t * t * t * t,
-  // acceleration until halfway, then deceleration
-  easeInOutQuart: (t) =>
-    t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t,
-  // accelerating from zero velocity
-  easeInQuint: (t) => t * t * t * t * t,
-  // decelerating to zero velocity
-  easeOutQuint: (t) => 1 + --t * t * t * t * t,
-  // acceleration until halfway, then deceleration
-  easeInOutQuint: (t) =>
-    t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
-  // Source https://gist.github.com/gre/1650294#file-easing-js
-};
-
-export default Wrapper;
