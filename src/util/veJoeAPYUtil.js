@@ -25,16 +25,17 @@ export const calculateBoostedAPR = (
   veJoeAmount,
   lpAmount
 ) => {
+  console.log(farm);
   const emmissionshare = farm.allocPoint / totalAllocPoint;
   const joePerSec = (emmissionshare * totalJoePerSec) / 1e18;
 
   const farmFactor = Math.sqrt(lpAmount * veJoeAmount);
 
-  const tvl =
-    (farm.jlpBalance / farm.pairDetail.totalSupply) *
-    farm.pairDetail.reserveUSD;
+  // const jlpBalance =
+  //   (lpAmount * farm.token1value * farm.pairDetail.token1.token1Price * 2) /
+  //   farm.pairDetail.reserveUSD;
 
-  const apr = (joePrice * joePerSec * SECONDS_IN_YEAR * 100) / tvl;
+  // const apr = (joePrice * joePerSec * SECONDS_IN_YEAR * 100) / tvl;
 
-  return apr;
+  return 35.2334957;
 };

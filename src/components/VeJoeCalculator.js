@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 
 import { MainContext } from "../context/Provider";
-import BoostPoolDashboard from "./veJoeCalc/BoostPoolDashboard";
+import FarmScrollingList from "./veJoeCalc/FarmScrollingList";
+import SelectedPoolStats from "./veJoeCalc/SelectedPoolStats";
 import NumInputComponent from "./NumInputComponent";
 import Loading3D from "../threeJs/Loading3D";
 
-import { calculateBaseAPR } from "../util/veJoeAPYUtil";
+import { calculateBaseAPR, calculateBoostedAPR } from "../util/veJoeAPYUtil";
 import { getTokenBalance } from "../util/AccountUtil";
 import { VEJOE_TOKEN_ADDRESS } from "../util/Constants";
 
@@ -52,6 +53,7 @@ export default function VeJoeCalculator() {
         emissions.joePerSec / 2,
         boostedFarms.joePrice
       );
+      pool["boostedAPR"] = 0.0;
     }
 
     setState((state) => ({
@@ -86,11 +88,17 @@ export default function VeJoeCalculator() {
   }, [context.main.accountDetails]);
 
   // calculate the APR of the selected pool
-  useEffect(() => {}, [
-    state.selectedBoostedFarm,
-    state.farmInputValue,
-    state.veJoeInputValue,
-  ]);
+  useEffect(() => {
+    const boostedFarmCalculations = state.selectedBoostedFarm;
+    boostedFarmCalculations["boostedAPR"] = calculateBoostedAPR(
+      state.selectedBoostedFarm,
+      state.boostedFarms.totalAllocPointBase,
+      state.boostedFarms.joePerSec,
+      state.boostedFarms.joePrice,
+      state.veJoeInputValue,
+      state.farmInputValue
+    );
+  }, [state.selectedBoostedFarm, state.farmInputValue, state.veJoeInputValue]);
 
   // on selected farm change update max value
   useEffect(() => {
@@ -124,16 +132,8 @@ export default function VeJoeCalculator() {
     return (
       <div className="flex justify-center items-center flex-grow">
         <div className=" flex items-center flex-col p-3 align-middle">
-          <BoostPoolDashboard
-            boostedFarms={state.boostedFarms.pools}
-            selectedBoostedFarm={state.selectedBoostedFarm}
-            onChangeFarmSelection={(selection) => {
-              setState((state) => ({
-                ...state,
-                boostedFarmSelection: selection,
-              }));
-            }}
-          />
+          {/* the selected coin info */}
+          <SelectedPoolStats selectedBoostedFarm={state.selectedBoostedFarm} />
           <NumInputComponent
             fieldName="veJoe"
             maxValue={state.veJoeInputMaxValue}
@@ -151,6 +151,16 @@ export default function VeJoeCalculator() {
               setState((state) => ({
                 ...state,
                 farmInputValue: input,
+              }));
+            }}
+          />
+          <FarmScrollingList
+            boostedFarms={state.boostedFarms.pools}
+            selectedBoostedFarm={state.selectedBoostedFarm}
+            onChangeFarmSelection={(selection) => {
+              setState((state) => ({
+                ...state,
+                selectedBoostedFarm: selection,
               }));
             }}
           />

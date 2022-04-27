@@ -98,7 +98,7 @@ export const AccountBadge = () => {
     return (
       <div className="border-white hover:border-orange-200 text-center border-solid border-2">
         <span
-          className="sm:px-4 font-normal text-white hover:text-orange-200 text-xs sm:text-base"
+          className="pr-2 font-normal text-white hover:text-orange-200 text-sm sm:text-lg"
           onClick={() => authenticate()}
         >
           {text}

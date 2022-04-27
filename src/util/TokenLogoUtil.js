@@ -1,8 +1,9 @@
 import { MainContext } from "../context/Provider";
-import { useContext } from "react";
+import React, { useContext } from "react";
+import { VisibilityContext } from "react-horizontal-scrolling-menu";
 
-export const getImgElementFromTokenAddress = (address) => {
-  const imageClass = "w-6 w-6";
+export const getImgElementFromTokenAddress = (address, size = 6) => {
+  const imageClass = `w-${size} h-${size} border-transparent border-solid rounded-xl `;
 
   //if avax, return local img
   if (address.toLowerCase() === "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7") {
@@ -18,19 +19,25 @@ export const getImgElementFromTokenAddress = (address) => {
   return <img className={imageClass} alt={alt} src={src} />;
 };
 
-export const LpPairButton = (onClickFunc, lpPair) => {
+export const LpPairButton = (onClickFunc, onClickVisibility, lpPair) => {
+  const visibility = React.useContext(VisibilityContext);
+
   return (
-    <div key={lpPair.pair} className="flex items-center">
+    <div itemID={lpPair.pair} key={lpPair.pair} className="flex items-center">
       <button
-        className="font-light text-transparent font-custom hover:text-orange-200"
-        onClick={() => onClickFunc()}
+        className="font-light text-transparent font-custom p-2 text-gray-500 hover:text-orange-200 border-transparent hover:border-slate-300 border-solid rounded-md
+     border-2 "
+        onClick={() => {
+          onClickFunc(lpPair);
+          onClickVisibility(visibility);
+        }}
       >
         <div className="flex justify-center">
           {getImgElementFromTokenAddress(lpPair.pairDetail.token0.id)}
           {getImgElementFromTokenAddress(lpPair.pairDetail.token1.id)}
         </div>
-        <h1 className="text-sm text-white">{lpPair.baseAPR.toPrecision(4)}%</h1>
-        <h1 className="text-xs">{lpPair.pairDetail.name}</h1>
+        <h1 className="text-sm font-bold ">{lpPair.baseAPR.toPrecision(4)}%</h1>
+        {/* <h1 className="text-xs w-5">{lpPair.pairDetail.name}</h1> */}
       </button>
     </div>
   );
