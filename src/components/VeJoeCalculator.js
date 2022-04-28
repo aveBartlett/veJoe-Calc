@@ -37,32 +37,22 @@ export default function VeJoeCalculator() {
       loaded: false,
     }));
     //setup all information to make VeJoe Calculations
-    const boostedFarms = await getBoostedMasterchef();
+    const [boostedFarms, joePrice, emissions] = await Promise.all([
+      getBoostedMasterchef(),
+      getJoePrice(),
+      getEmissions(),
+    ]);
 
-    boostedFarms["joePrice"] = await getJoePrice();
+    boostedFarms["joePrice"] = joePrice;
 
-    const emissions = await getEmissions();
     boostedFarms["joePerSecBase"] = emissions.joePerSec;
     boostedFarms["totalAllocPointBase"] = emissions.totalAllocPoint;
 
-    //add more info to boosted farms and calcualte APY
-    for (const pool of boostedFarms.pools) {
-      const pairDetail = await getPairsDetail(pool.pair);
-
-      pairDetail["pairPrice"] = await getPairValue(pairDetail);
-
-      // const boostedFarmData = await getPoolInfo(pool.id);
-      // console.log(boostedFarmData);
-
-      pool["pairDetail"] = pairDetail;
-      pool["baseAPR"] = calculateBaseAPR(
-        pool,
-        emissions.totalAllocPoint,
-        emissions.joePerSec / 2,
-        boostedFarms.joePrice
-      );
-      pool["boostedAPR"] = 0.0;
-    }
+    boostedFarms.pool = await Promise.all(
+      boostedFarms.pools.map((pool) =>
+        buildPoolData(pool, emissions, boostedFarms.joePrice)
+      )
+    );
 
     setState((state) => ({
       ...state,
@@ -187,3 +177,21 @@ export default function VeJoeCalculator() {
 }
 
 const onFirstTimeLoad = () => {};
+
+const buildPoolData = async (pool, emissions, joePrice) => {
+  const pairDetail = await getPairsDetail(pool.pair);
+  pairDetail["pairPrice"] = await getPairValue(pairDetail);
+
+  // const boostedFarmData = await getPoolInfo(pool.id);
+  // console.log(boostedFarmData);
+
+  pool["pairDetail"] = pairDetail;
+  pool["baseAPR"] = calculateBaseAPR(
+    pool,
+    emissions.totalAllocPoint,
+    emissions.joePerSec / 2,
+    joePrice
+  );
+  pool["boostedAPR"] = 0.0;
+  return pool;
+};
