@@ -12,6 +12,7 @@ export default function SelectedPoolStats(props) {
   });
 
   useEffect(() => {
+    console.log(props.selectedBoostedFarm.boostedAPR);
     setState((state) => ({
       ...state,
       name: props.selectedBoostedFarm.pairDetail.name,
@@ -21,7 +22,7 @@ export default function SelectedPoolStats(props) {
       baseAPR: props.selectedBoostedFarm.baseAPR,
       boostedAPR: props.selectedBoostedFarm.boostedAPR,
     }));
-  }, [props.selectedBoostedFarm]);
+  }, [props.selectedBoostedFarm.boostedAPR]);
 
   return (
     <div className="flex flex-col items-center font-custom">

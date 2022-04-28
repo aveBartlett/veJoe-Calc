@@ -16,3 +16,9 @@ export const getPoolInfo = async (address) => {
 
   return data;
 };
+
+export const getJoePerSecBoosted = async () => {
+  const data = await boostedMCContract.joePerSec();
+
+  return +data;
+};

@@ -60,7 +60,7 @@ const NumInputComponent = (props) => {
           required
           onKeyPress={(evt) => validateNumFormat(evt)}
           onChange={(evt) => onChangeInput(evt)}
-          value={state.investmentValue.substring(0, maxInputLength)}
+          value={String(state.investmentValue).substring(0, maxInputLength)}
           placeholder={String(props.maxValue).substring(0, maxInputLength)}
           name="investmentValue"
         ></input>

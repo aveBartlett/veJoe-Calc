@@ -3,19 +3,21 @@ import React, { useEffect, useState, useContext } from "react";
 import { MainContext } from "../context/Provider";
 import FarmScrollingList from "./veJoeCalc/FarmScrollingList";
 import SelectedPoolStats from "./veJoeCalc/SelectedPoolStats";
-import NumInputComponent from "./NumInputComponent";
+import NumInputComponent from "./veJoeCalc/NumInputComponent";
 import Loading3D from "../threeJs/Loading3D";
 
 import { calculateBaseAPR, calculateBoostedAPR } from "../util/veJoeAPYUtil";
 import { getTokenBalance } from "../util/AccountUtil";
-import { VEJOE_TOKEN_ADDRESS } from "../util/Constants";
 
 import { getBoostedMasterchef } from "../util/subgraphs/BoostedFarmsSubgraph";
 import { getPairsDetail } from "../util/subgraphs/LiquidityPairSubgraph";
 import { getEmissions } from "../util/subgraphs/EmissionsSubGraph";
 import { getJoePrice } from "../util/subgraphs/JoeSubgraph";
 import { getPairValue } from "../util/PairPriceUtil";
-import { getPoolInfo } from "../util/contracts/BoostedMCContract";
+import {
+  getJoePerSecBoosted,
+  getPoolInfo,
+} from "../util/contracts/BoostedMCContract";
 
 export default function VeJoeCalculator() {
   const context = useContext(MainContext);
@@ -37,18 +39,21 @@ export default function VeJoeCalculator() {
       loaded: false,
     }));
     //setup all information to make VeJoe Calculations
-    const [boostedFarms, joePrice, emissions] = await Promise.all([
-      getBoostedMasterchef(),
-      getJoePrice(),
-      getEmissions(),
-    ]);
+    const [boostedFarms, joePrice, emissions, joePerSecBoosted] =
+      await Promise.all([
+        getBoostedMasterchef(),
+        getJoePrice(),
+        getEmissions(),
+        getJoePerSecBoosted(),
+      ]);
 
     boostedFarms["joePrice"] = joePrice;
 
     boostedFarms["joePerSecBase"] = emissions.joePerSec;
+    boostedFarms["joePerSecBoosted"] = joePerSecBoosted;
     boostedFarms["totalAllocPointBase"] = emissions.totalAllocPoint;
 
-    boostedFarms.pool = await Promise.all(
+    boostedFarms.pools = await Promise.all(
       boostedFarms.pools.map((pool) =>
         buildPoolData(pool, emissions, boostedFarms.joePrice)
       )
@@ -88,14 +93,20 @@ export default function VeJoeCalculator() {
   useEffect(() => {
     if (state.loaded) {
       const boostedFarmCalculations = state.selectedBoostedFarm;
+      console.log(state.boostedFarms);
       boostedFarmCalculations["boostedAPR"] = calculateBoostedAPR(
         state.selectedBoostedFarm,
-        state.boostedFarms.totalAllocPointBase,
-        state.boostedFarms.joePerSec,
+        state.boostedFarms.totalAllocPoint,
+        state.boostedFarms.joePerSecBoosted,
         state.boostedFarms.joePrice,
-        state.veJoeInputValue,
-        state.farmInputValue
+        state.veJoeInputValue || 0,
+        state.farmInputValue || 0
       );
+      console.log(boostedFarmCalculations);
+      setState((state) => ({
+        ...state,
+        selectedBoostedFarm: boostedFarmCalculations,
+      }));
     }
   }, [
     state.selectedBoostedFarm,
@@ -175,8 +186,6 @@ export default function VeJoeCalculator() {
     );
   }
 }
-
-const onFirstTimeLoad = () => {};
 
 const buildPoolData = async (pool, emissions, joePrice) => {
   const pairDetail = await getPairsDetail(pool.pair);
