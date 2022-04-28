@@ -25,11 +25,11 @@ export const getImgElementFromTokenAddress = (address, size = 6) => {
   return <img className={imageClass} alt={alt} src={src} />;
 };
 
-export const LpPairButton = (onClickFunc, onClickVisibility, lpPair) => {
+const MenuItem = ({ lpPair, onClickFunc, onClickVisibility, selected }) => {
   const visibility = React.useContext(VisibilityContext);
 
   return (
-    <div itemID={lpPair.pair} key={lpPair.pair} className="flex items-center">
+    <div className="flex items-center">
       <button
         className="font-light text-transparent font-custom p-2 text-gray-500 hover:text-orange-200 border-transparent hover:border-slate-300 border-solid rounded-md
      border-2 "
@@ -46,6 +46,25 @@ export const LpPairButton = (onClickFunc, onClickVisibility, lpPair) => {
         {/* <h1 className="text-xs w-5">{lpPair.pairDetail.name}</h1> */}
       </button>
     </div>
+  );
+};
+
+export const LpPairButton = (
+  onClickFunc,
+  onClickVisibility,
+  lpPair,
+  selected
+) => {
+  return (
+    <MenuItem
+      itemId={lpPair.pair}
+      key={lpPair.pair}
+      text={lpPair.pair}
+      selected={selected}
+      lpPair={lpPair}
+      onClickFunc={onClickFunc}
+      onClickVisibility={onClickVisibility}
+    />
   );
 };
 

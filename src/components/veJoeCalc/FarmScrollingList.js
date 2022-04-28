@@ -47,14 +47,10 @@ export default function FarmScrollingList(props) {
     };
 
   return (
-    <div className=" flex items-center flex-col align-middle w-1/2">
+    <div className=" flex items-center flex-col align-middle w-full">
       {/* rest of the tokens APR */}
-      <div className="">
-        <ScrollMenu
-          scrollContainerClassName=""
-          LeftArrow={LeftArrow}
-          RightArrow={RightArrow}
-        >
+      <div className="w-full">
+        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
           {state.farmList.map((farm) =>
             LpPairButton(
               (selectedFarm) => {
@@ -62,7 +58,8 @@ export default function FarmScrollingList(props) {
                 props.onChangeFarmSelection(selectedFarm);
               },
               handleClick(farm),
-              farm
+              farm,
+              isItemSelected(farm)
             )
           )}
         </ScrollMenu>
@@ -104,7 +101,7 @@ function RightArrow() {
   );
 }
 
-function Arrow({ children, disabled, onClick }) {
+function Arrow({ children, onClick, disabled }) {
   return (
     <button
       disabled={disabled}
