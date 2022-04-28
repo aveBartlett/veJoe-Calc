@@ -18,11 +18,17 @@ export default function SelectedPoolStats(props) {
       name: props.selectedBoostedFarm.pairDetail.name,
       token0Address: props.selectedBoostedFarm.pairDetail.token0.id,
       token1Address: props.selectedBoostedFarm.pairDetail.token1.id,
-      veJoeShare: props.selectedBoostedFarm.veJoeShare,
+      veJoeShare:
+        props.selectedBoostedFarm.veJoeShare >= 0.01
+          ? props.selectedBoostedFarm.veJoeShare
+          : 0,
       baseAPR: props.selectedBoostedFarm.baseAPR,
       boostedAPR: props.selectedBoostedFarm.boostedAPR,
     }));
-  }, [props.selectedBoostedFarm.boostedAPR]);
+  }, [
+    props.selectedBoostedFarm.boostedAPR,
+    props.selectedBoostedFarm.veJoeShare,
+  ]);
 
   return (
     <div className="flex flex-col items-center font-custom">
@@ -43,7 +49,9 @@ export default function SelectedPoolStats(props) {
       <div className="flex justify-center text-center items-center">
         <div className="flex flex-col text-center pt-2">
           <h1 className="text-gray-200 text-xs">veJOE SHARE</h1>
-          <h1 className="text-white font-extrabold text-2xl">0.2%</h1>
+          <h1 className="text-white font-extrabold text-2xl">
+            {String(state.veJoeShare).substring(0, 4)}%
+          </h1>
         </div>
         <div className="flex flex-col text-center pl-2 pt-2">
           <h1 className="text-gray-200 text-xs">BASE APR</h1>

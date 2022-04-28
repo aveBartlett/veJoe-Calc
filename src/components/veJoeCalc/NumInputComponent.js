@@ -29,6 +29,8 @@ const NumInputComponent = (props) => {
   };
 
   const fillInputWMaxValue = () => {
+    props.onChangeInput(props.maxValue);
+
     setState((state) => ({
       ...state,
       investmentValue: props.maxValue,
