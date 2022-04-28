@@ -32,18 +32,12 @@ export default function FarmScrollingList(props) {
     }));
   }, []);
 
-  const isItemSelected = (farm) => !!selected.find((el) => el === farm);
+  const isItemSelected = (farm) => selected.id == farm.id;
 
   const handleClick =
     (id) =>
     ({ getItemById, scrollToItem }) => {
-      const itemSelected = isItemSelected(id);
-
-      setSelected((currentSelected) =>
-        itemSelected
-          ? currentSelected.filter((el) => el !== id)
-          : currentSelected.concat(id)
-      );
+      setSelected(id);
     };
 
   return (
