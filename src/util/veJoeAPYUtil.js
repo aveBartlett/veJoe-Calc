@@ -26,18 +26,19 @@ export const calculateBoostedAPR = (
   lpAmount
 ) => {
   console.log(farm);
-  const emmissionshare = farm.allocPoint / totalAllocPoint;
-  const estimatedPoolShare = farm.pairDetail.pairPrice / farm.reserveUSD;
-  const poolJoePerSec = (totalJoePerSec * farm.allocPoint) / totalAllocPoint;
-  const farmFactor = Math.sqrt(lpAmount * veJoeAmount);
+  // const emmissionshare = farm.allocPoint / totalAllocPoint;
+  // const estimatedPoolShare = farm.pairDetail.pairPrice / farm.reserveUSD;
+  // const poolJoePerSec =
+  //   (masterChef.joePerSec / 10) ^ ((18 * farm.allocPoint) / totalAllocPoint);
+  // const farmFactor = Math.sqrt(lpAmount * veJoeAmount);
 
-  const joePerSec = (emmissionshare * totalJoePerSec) / 1e18;
+  // const joePerSec = (emmissionshare * totalJoePerSec) / 1e18;
 
-  // const jlpBalance =
-  //   (lpAmount * farm.token1value * farm.pairDetail.token1.token1Price * 2) /
-  //   farm.pairDetail.reserveUSD;
+  // // const jlpBalance =
+  // //   (lpAmount * farm.token1value * farm.pairDetail.token1.token1Price * 2) /
+  // //   farm.pairDetail.reserveUSD;
 
-  // const apr = (joePrice * joePerSec * SECONDS_IN_YEAR * 100) / tvl;
+  // // const apr = (joePrice * joePerSec * SECONDS_IN_YEAR * 100) / tvl;
 
   return 35.2334957;
 };

@@ -15,6 +15,7 @@ import { getPairsDetail } from "../util/subgraphs/LiquidityPairSubgraph";
 import { getEmissions } from "../util/subgraphs/EmissionsSubGraph";
 import { getJoePrice } from "../util/subgraphs/JoeSubgraph";
 import { getPairValue } from "../util/PairPriceUtil";
+import { getPoolInfo } from "../util/contracts/BoostedMCContract";
 
 export default function VeJoeCalculator() {
   const context = useContext(MainContext);
@@ -41,7 +42,7 @@ export default function VeJoeCalculator() {
     boostedFarms["joePrice"] = await getJoePrice();
 
     const emissions = await getEmissions();
-    boostedFarms["joePerSec"] = emissions.joePerSec;
+    boostedFarms["joePerSecBase"] = emissions.joePerSec;
     boostedFarms["totalAllocPointBase"] = emissions.totalAllocPoint;
 
     //add more info to boosted farms and calcualte APY
@@ -49,6 +50,9 @@ export default function VeJoeCalculator() {
       const pairDetail = await getPairsDetail(pool.pair);
 
       pairDetail["pairPrice"] = await getPairValue(pairDetail, context);
+
+      const boostedFarmData = await getPoolInfo(pool.id);
+      console.log(boostedFarmData);
 
       pool["pairDetail"] = pairDetail;
       pool["baseAPR"] = calculateBaseAPR(
@@ -67,7 +71,6 @@ export default function VeJoeCalculator() {
     }));
 
     context.setBoostedFarms(boostedFarms);
-    console.log(boostedFarms);
 
     setState((state) => ({
       ...state,

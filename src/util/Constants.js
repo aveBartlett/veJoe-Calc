@@ -65,6 +65,11 @@ export const VEJOE_TOKEN_ADDRESS = "0x3cabf341943Bc8466245e4d6F1ae0f8D071a1456";
 
 export const VEJOE_SHARE = 0.4;
 
+export const BOOSTED_MASTERCHEF_ADDRESS =
+  "0x4483f0b6e2F5486D06958C20f8C39A7aBe87bf8F";
+
+export const FARMLENS_ADDRESS = "0xF16d25Eba0D8E51cEAF480141bAf577aE55bfdd2";
+
 export const BOOSTED_MASTERCHEF_SUBGRAPH =
   "https://api.thegraph.com/subgraphs/name/traderjoe-xyz/boosted-master-chef";
 
@@ -79,3 +84,8 @@ export const EXCHANGE_SUBGRAPH =
 
 export const JOE_TOKEN_LIST_URL =
   "https://raw.githubusercontent.com/traderjoe-xyz/joe-tokenlists/main/joe.tokenlist.json";
+
+export const MORALIS_MAINNET_RPC =
+  "https://speedy-nodes-nyc.moralis.io/543b50e7bb5ca4f50c9df822/avalanche/mainnet";
+
+export const MAINNET_RPC = "https://api.avax.network/ext/bc/C/rpc";
