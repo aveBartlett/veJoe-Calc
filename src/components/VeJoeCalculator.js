@@ -49,10 +49,10 @@ export default function VeJoeCalculator() {
     for (const pool of boostedFarms.pools) {
       const pairDetail = await getPairsDetail(pool.pair);
 
-      pairDetail["pairPrice"] = 0; //await getPairValue(pairDetail, context);
+      pairDetail["pairPrice"] = await getPairValue(pairDetail);
 
-      const boostedFarmData = await getPoolInfo(pool.id);
-      console.log(boostedFarmData);
+      // const boostedFarmData = await getPoolInfo(pool.id);
+      // console.log(boostedFarmData);
 
       pool["pairDetail"] = pairDetail;
       pool["baseAPR"] = calculateBaseAPR(
@@ -145,29 +145,31 @@ export default function VeJoeCalculator() {
   } else {
     return (
       <div className="flex justify-center items-center flex-grow">
-        <div className=" flex items-center flex-col p-3 align-middle w-80">
+        <div className=" flex items-center flex-col p-3 w-80 space-y-2">
           {/* the selected coin info */}
           <SelectedPoolStats selectedBoostedFarm={state.selectedBoostedFarm} />
-          <NumInputComponent
-            fieldName="veJoe"
-            maxValue={state.veJoeInputMaxValue}
-            onChangeInput={(input) => {
-              setState((state) => ({
-                ...state,
-                veJoeInputValue: input,
-              }));
-            }}
-          />
-          <NumInputComponent
-            fieldName="farm "
-            maxValue={state.farmInputMaxValue}
-            onChangeInput={(input) => {
-              setState((state) => ({
-                ...state,
-                farmInputValue: input,
-              }));
-            }}
-          />
+          <div className="flex flex-col">
+            <NumInputComponent
+              fieldName="veJoe"
+              maxValue={state.veJoeInputMaxValue}
+              onChangeInput={(input) => {
+                setState((state) => ({
+                  ...state,
+                  veJoeInputValue: input,
+                }));
+              }}
+            />
+            <NumInputComponent
+              fieldName="farm "
+              maxValue={state.farmInputMaxValue}
+              onChangeInput={(input) => {
+                setState((state) => ({
+                  ...state,
+                  farmInputValue: input,
+                }));
+              }}
+            />
+          </div>
           <FarmScrollingList
             boostedFarms={state.boostedFarms.pools}
             selectedBoostedFarm={state.selectedBoostedFarm}
