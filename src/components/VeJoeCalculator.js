@@ -49,7 +49,7 @@ export default function VeJoeCalculator() {
     for (const pool of boostedFarms.pools) {
       const pairDetail = await getPairsDetail(pool.pair);
 
-      pairDetail["pairPrice"] = await getPairValue(pairDetail, context);
+      pairDetail["pairPrice"] = 0; //await getPairValue(pairDetail, context);
 
       const boostedFarmData = await getPoolInfo(pool.id);
       console.log(boostedFarmData);
