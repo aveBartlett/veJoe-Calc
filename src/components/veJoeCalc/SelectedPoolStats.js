@@ -8,6 +8,7 @@ export default function SelectedPoolStats(props) {
     token1Address: "",
     veJoeShare: 0,
     baseAPR: 0,
+    baseBoostedAPR: 0,
     boostedAPR: 0,
   });
 
@@ -23,6 +24,7 @@ export default function SelectedPoolStats(props) {
           ? props.selectedBoostedFarm.veJoeShare
           : 0,
       baseAPR: props.selectedBoostedFarm.baseAPR,
+      baseBoostedAPR: props.selectedBoostedFarm.baseBoostedAPR,
       boostedAPR: props.selectedBoostedFarm.boostedAPR,
     }));
   }, [
@@ -41,21 +43,27 @@ export default function SelectedPoolStats(props) {
       </div>
       <h1 className="text-white font-extrabold text-lg">{state.name}</h1>
       <div className="flex flex-col text-center pt-2">
-        <h1 className="text-gray-200 text-xs">BOOSTED APR</h1>
-        <h1 className="text-white font-extrabold text-3xl">
+        <h1 className="text-gray-200 text-xs">EST BOOSTED APR</h1>
+        <h1 className="text-white font-extrabold text-4xl">
           {state.boostedAPR.toPrecision(4)}%
         </h1>
       </div>
-      <div className="flex justify-center text-center items-center">
+      <div className="flex justify-center text-center items-center space-x-2">
+        <div className="flex flex-col text-center pl-2 pt-2">
+          <h1 className="text-gray-200 text-xs">BOOSTED APR</h1>
+          <h1 className="text-white font-extrabold text-lg">
+            {state.baseBoostedAPR.toPrecision(4)}%
+          </h1>
+        </div>
         <div className="flex flex-col text-center pt-2">
           <h1 className="text-gray-200 text-xs">veJOE SHARE</h1>
-          <h1 className="text-white font-extrabold text-2xl">
+          <h1 className="text-white font-extrabold text-lg">
             {String(state.veJoeShare).substring(0, 4)}%
           </h1>
         </div>
         <div className="flex flex-col text-center pl-2 pt-2">
           <h1 className="text-gray-200 text-xs">BASE APR</h1>
-          <h1 className="text-white font-extrabold text-2xl">
+          <h1 className="text-white font-extrabold text-lg">
             {state.baseAPR.toPrecision(4)}%
           </h1>
         </div>

@@ -13,6 +13,8 @@ const getPairsQueryDocument = gql`
       totalSupply
       token0Price
       token1Price
+      reserve0
+      reserve1
       token0 {
         id
         symbol

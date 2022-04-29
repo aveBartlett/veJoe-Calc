@@ -89,3 +89,23 @@ export const MORALIS_MAINNET_RPC =
   "https://speedy-nodes-nyc.moralis.io/543b50e7bb5ca4f50c9df822/avalanche/mainnet";
 
 export const MAINNET_RPC = "https://api.avax.network/ext/bc/C/rpc";
+
+export const WAVAX_ADDRESS = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7";
+
+export const MIM_ADDRESS = "0x130966628846bfd36ff31a822705796e8cb8c18d";
+
+export const USDt_ADDRESS = "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7";
+
+export const USDC_ADDRESS = "0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e";
+
+export const USDTe_ADDRESS = "0xc7198437980c041c805a1edcba50c1ce5db95118";
+
+export const USDCe_ADDRESS = "0xa7d7079b0fead91f3e65f86e8915cb59c1a4c664";
+
+export const stables = [
+  MIM_ADDRESS,
+  USDt_ADDRESS,
+  USDC_ADDRESS,
+  USDTe_ADDRESS,
+  USDCe_ADDRESS,
+];

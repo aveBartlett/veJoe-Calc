@@ -58,7 +58,7 @@ export default function VeJoeCalculator() {
 
     boostedFarms.pools = await Promise.all(
       boostedFarms.pools.map((pool) =>
-        buildPoolData(pool, emissions, boostedFarms.joePrice)
+        buildPoolData(pool, emissions, boostedFarms)
       )
     );
 
@@ -190,7 +190,7 @@ export default function VeJoeCalculator() {
   }
 }
 
-const buildPoolData = async (pool, emissions, joePrice) => {
+const buildPoolData = async (pool, emissions, boostedFarms) => {
   const pairDetail = await getPairsDetail(pool.pair);
   pairDetail["pairPrice"] = await getPairValue(pairDetail);
 
@@ -202,8 +202,18 @@ const buildPoolData = async (pool, emissions, joePrice) => {
     pool,
     emissions.totalAllocPoint,
     emissions.joePerSec / 2,
-    joePrice
+    boostedFarms.joePrice
   );
+  pool["baseBoostedAPR"] = calculateBoostedAPR(
+    pool,
+    boostedFarms.totalAllocPoint,
+    boostedFarms.joePerSecBoosted,
+    boostedFarms.joePrice,
+    0,
+    0
+  );
+  console;
+
   pool["boostedAPR"] = 0.0;
   return pool;
 };
