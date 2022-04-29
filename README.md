@@ -1,3 +1,8 @@
+## veJoe Calculator
+#### Submission for the Trader Joe xyz veJoe calculator bounty
+App can be found live at https://cs23appumvpf.usemoralis.com/
+
+##
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
