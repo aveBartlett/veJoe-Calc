@@ -1,31 +1,71 @@
-import { pointFromVector } from "popmotion";
 import { WAVAX_ADDRESS, stables } from "./Constants";
-import { getTokenPrice } from "./contracts/FarmLensContract";
 
-export const getPairValue = async (pairDetail) => {
-  const token0id = pairDetail.token0.id;
+export const convertUsdToJLP = (selectedBoostedFarm, avaxPrice, amount) => {
+  console.log(selectedBoostedFarm);
+  if (isUsdStable(selectedBoostedFarm.pairDetail.token0.id)) {
+    return (
+      2 *
+      (amount / selectedBoostedFarm.pairDetail.reserve0) *
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  } else if (isUsdStable(selectedBoostedFarm.pairDetail.token1.id)) {
+    return (
+      2 *
+      (amount / selectedBoostedFarm.pairDetail.reserve0) *
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  }
 
-  const token0Price = await getTokenPrice(token0id);
-  console.log();
-
-  return token0Price * pairDetail.token0Price * 2;
+  if (selectedBoostedFarm.pairDetail.token0.id === WAVAX_ADDRESS) {
+    const avaxAmount = amount / avaxPrice;
+    return (
+      2 *
+      (avaxAmount / selectedBoostedFarm.pairDetail.reserve0) *
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  } else {
+    const avaxAmount = amount / avaxPrice;
+    return (
+      2 *
+      (avaxAmount / selectedBoostedFarm.pairDetail.reserve1) *
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  }
 };
 
-// export const revertUsdToJLP = (selectedBoostedFarm, amount, reserves) => {
-//   if (isUsdStable(selectedBoostedFarm.pairDetail.token0.id)) {
-//     return amount /reserves *
-//   }
-//   const liquidity = Math.min(
-//     (amount0 * 10 ** Number.parseInt(pool_data.token0Decimals)) / reserves[0],
-//     (amount1 * 10 ** Number.parseInt(pool_data.token1Decimals)) / reserves[1]
-//   );
-//   return liquidity * pool_data.totalSupply;
-// };
+export const convertJLPtoUsd = (selectedBoostedFarm, avaxPrice, amount) => {
+  if (isUsdStable(selectedBoostedFarm.pairDetail.token0.id)) {
+    return (
+      (2 * (amount * selectedBoostedFarm.pairDetail.reserve0)) /
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  } else if (isUsdStable(selectedBoostedFarm.pairDetail.token1.id)) {
+    return (
+      (2 * (amount * selectedBoostedFarm.pairDetail.reserve1)) /
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  }
 
-// const isUsdStable = (address) => {
-//   for (const stableAddress of stables) {
-//     if (stableAddress === address) {
-//       return true;
-//     }
-//   }
-// };
+  if (selectedBoostedFarm.pairDetail.token0.id === WAVAX_ADDRESS) {
+    const avaxAmount = amount / avaxPrice;
+    return (
+      (2 * (avaxAmount * selectedBoostedFarm.pairDetail.reserve0)) /
+      selectedBoostedFarm.pairDetail.totalSupply
+    );
+  } else {
+    const avaxAmount = amount / avaxPrice;
+    return (
+      2 *
+      ((avaxAmount * selectedBoostedFarm.pairDetail.reserve1) /
+        selectedBoostedFarm.pairDetail.totalSupply)
+    );
+  }
+};
+
+const isUsdStable = (address) => {
+  for (const stableAddress of stables) {
+    if (stableAddress === address) {
+      return true;
+    }
+  }
+};

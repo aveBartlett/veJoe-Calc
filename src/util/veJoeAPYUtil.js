@@ -25,8 +25,6 @@ export const calculateBoostedAPR = (
   veJoeAmount,
   lpAmount
 ) => {
-  console.log(farm);
-
   //------------------------
   // This is possibly wrong, but the documentation was hard.
   // god bless
@@ -45,8 +43,6 @@ export const calculateBoostedAPR = (
   const boostedAPR = numerator / denominator;
 
   const apr = 0.4 * boostedAPR + 0.6 * farm.baseAPR;
-
-  console.log(apr);
 
   return apr;
 };

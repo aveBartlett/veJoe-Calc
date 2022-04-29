@@ -7,7 +7,7 @@ const NumInputComponent = (props) => {
     buttonDisabled: true,
   });
 
-  const maxInputLength = 10;
+  const maxInputLength = 12;
 
   const regex = /^[0-9]*[.,]?[0-9]*$/;
 
@@ -52,7 +52,7 @@ const NumInputComponent = (props) => {
     <div className="items-center justify-center py-2 flex flex-col ">
       <div className="border-b-2 border-white">
         <label className="font-bold text-white font-custom">
-          {props.fieldName}:
+          {props.fieldName}
         </label>
         <input
           className="text-white font-custom bg-black outline-none appearance-none w-32"

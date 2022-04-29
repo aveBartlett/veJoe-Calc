@@ -15,7 +15,11 @@ import { getEmissions } from "../util/subgraphs/EmissionsSubGraph";
 import { getJoePrice } from "../util/subgraphs/JoeSubgraph";
 import { getVeJoeSupply } from "../util/subgraphs/VeJoeSubgraph";
 
-import { getPairValue } from "../util/PairPriceUtil";
+import {
+  getPairValue,
+  convertUsdToJLP,
+  convertJLPtoUsd,
+} from "../util/PairPriceUtil";
 import {
   getJoePerSecBoosted,
   getPoolInfo,
@@ -61,6 +65,13 @@ export default function VeJoeCalculator() {
         buildPoolData(pool, emissions, boostedFarms)
       )
     );
+
+    for (const pool of boostedFarms.pools) {
+      console.log(pool);
+      if (pool.pair === "0xf4003f4efbe8691b60249e6afbd307abe7758adb") {
+        boostedFarms["avaxPrice"] = pool.pairDetail.token1Price;
+      }
+    }
 
     setState((state) => ({
       ...state,
@@ -154,7 +165,7 @@ export default function VeJoeCalculator() {
           <SelectedPoolStats selectedBoostedFarm={state.selectedBoostedFarm} />
           <div className="flex flex-col">
             <NumInputComponent
-              fieldName="veJoe"
+              fieldName="veJoe:"
               maxValue={state.veJoeInputMaxValue}
               onChangeInput={(input) => {
                 setState((state) => ({
@@ -164,9 +175,18 @@ export default function VeJoeCalculator() {
               }}
             />
             <NumInputComponent
-              fieldName="farm "
-              maxValue={state.farmInputMaxValue}
+              fieldName="farm:$"
+              maxValue={convertJLPtoUsd(
+                state.selectedBoostedFarm,
+                state.boostedFarms.avaxPrice,
+                state.farmInputMaxValue
+              )}
               onChangeInput={(input) => {
+                input = convertUsdToJLP(
+                  state.selectedBoostedFarm,
+                  state.boostedFarms.avaxPrice,
+                  input
+                );
                 setState((state) => ({
                   ...state,
                   farmInputValue: input,
@@ -192,7 +212,6 @@ export default function VeJoeCalculator() {
 
 const buildPoolData = async (pool, emissions, boostedFarms) => {
   const pairDetail = await getPairsDetail(pool.pair);
-  pairDetail["pairPrice"] = await getPairValue(pairDetail);
 
   const boostedFarmData = await getPoolInfo(pool.id);
   pairDetail["totalFactor"] = +boostedFarmData.totalFactor;
@@ -212,8 +231,7 @@ const buildPoolData = async (pool, emissions, boostedFarms) => {
     0,
     0
   );
-  console;
-
   pool["boostedAPR"] = 0.0;
+
   return pool;
 };

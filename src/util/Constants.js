@@ -92,6 +92,8 @@ export const MAINNET_RPC = "https://api.avax.network/ext/bc/C/rpc";
 
 export const WAVAX_ADDRESS = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7";
 
+export const WAVAX_USDC_ADDRESS = "0xf4003f4efbe8691b60249e6afbd307abe7758adb";
+
 export const MIM_ADDRESS = "0x130966628846bfd36ff31a822705796e8cb8c18d";
 
 export const USDt_ADDRESS = "0x9702230a8ea53601f5cd2dc00fdbc13d4df4a8c7";
